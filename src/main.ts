@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import * as express from 'express';
+import { CustomExceptionFilter } from './errors/custom-exception-filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +20,8 @@ async function bootstrap() {
   );
   app.enableCors();
   app.use(express.json({ limit: '10mb' }));
+
+  app.useGlobalFilters(new CustomExceptionFilter());
 
   await app.listen(port);
 }
