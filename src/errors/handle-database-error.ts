@@ -7,5 +7,6 @@ export function handleDatabaseError(exception: Error): string | null {
     return 'role is invalid';
   }
 
+  console.error('Error:: ', exception.message);
   return 'Something went wrong';
 }

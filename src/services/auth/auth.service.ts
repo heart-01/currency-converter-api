@@ -1,18 +1,12 @@
-import {
-  ConflictException,
-  Injectable,
-  InternalServerErrorException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { User } from './entities/user.entity';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { User } from '../user/entities/user.entity';
 import { UserSignInDto } from './dto/user-signin.dto';
 import { UserSignUpDto } from './dto/user-signup.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
-import { UserResponseDto } from './dto/user-response.dto';
+import { UserResponseDto } from '../user/dto/user-response.dto';
 import { JwtService } from '@nestjs/jwt';
-import { InvalidDataError } from 'src/errors/http-exception';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +14,7 @@ export class AuthService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
+    private readonly userService: UserService,
   ) {}
 
   async signIn(userSignInDto: UserSignInDto) {
@@ -49,22 +44,7 @@ export class AuthService {
   }
 
   signUp(userSignUpDto: UserSignUpDto): Promise<UserResponseDto> {
-    return this.createUser(userSignUpDto);
-  }
-
-  async createUser(userSignUpDto: UserSignUpDto): Promise<UserResponseDto> {
-    const { name, username, password, email } = userSignUpDto;
-    const salt = bcrypt.genSaltSync();
-
-    const user = new User();
-    user.name = name;
-    user.username = username;
-    user.email = email;
-    user.salt = salt;
-    user.password = await bcrypt.hash(password, salt);
-    await user.save();
-
-    return new UserResponseDto(user);
+    return this.userService.createUser(userSignUpDto);
   }
 
   async signAccessToken(refreshToken: string) {

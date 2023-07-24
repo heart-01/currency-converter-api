@@ -1,6 +1,8 @@
 @base_url = http://localhost
 @port = 3000
 @url = {{base_url}}:{{port}}
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluMUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InVzZXJuYW1lIiwiaWF0IjoxNjkwMjIxMjE1LCJleHAiOjE2OTAyMjQ4MTV9.v9N-JdJs2a-W30qbk3VzaLhKd4NHwHwtyaeb-0LCyBU
+@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4xIiwiZW1haWwiOiJhZG1pbjFAZW1haWwuY29tIiwidXNlcm5hbWUiOiJ1c2VybmFtZTEiLCJpYXQiOjE2OTAyMTk5MDEsImV4cCI6MTY5MDgyNDcwMX0.pCFirLjG857VEVyciqrLr3mPhw2HfefccshILGpjF78
 
 ### SignUp
 POST {{url}}/auth/signup HTTP/1.1
@@ -25,18 +27,32 @@ Content-Type: application/json
 ### Refresh token
 POST {{url}}/auth/refreshToken HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer refreshToken
+Authorization: Bearer {{refreshToken}}
 
 {
-    "refreshToken": ""
+    "refreshToken": "{{refreshToken}}"
 }
 
-### Test guard route
-GET {{url}}/auth/testJWT HTTP/1.1
+### Update user
+PATCH {{url}}/user/35 HTTP/1.1
 Content-Type: application/json
-Authorization: Bearer 
+Authorization: Bearer {{accessToken}}
 
 {
+    "name": "admin",
+    "email": "admin@email.com",
     "username": "username",
     "password": "P@ssw0rd"
 }
+
+### Update user image
+PATCH {{url}}/user/35 HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Authorization: Bearer {{accessToken}}
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="profile.png"
+Content-Type: image/png
+
+< ./src/assets/mock/profile.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
