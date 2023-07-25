@@ -8,6 +8,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthJwtStrategy } from './auth.jwt.strategy';
 import { ConfigService } from '@nestjs/config';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
     TypeOrmModule.forFeature([User]),
+    HttpModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, UserService, AuthJwtStrategy],

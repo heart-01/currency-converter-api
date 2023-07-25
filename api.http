@@ -1,8 +1,8 @@
 @base_url = http://localhost
 @port = 3000
 @url = {{base_url}}:{{port}}
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluMUBlbWFpbC5jb20iLCJ1c2VybmFtZSI6InVzZXJuYW1lIiwiaWF0IjoxNjkwMjIxMjE1LCJleHAiOjE2OTAyMjQ4MTV9.v9N-JdJs2a-W30qbk3VzaLhKd4NHwHwtyaeb-0LCyBU
-@refreshToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4xIiwiZW1haWwiOiJhZG1pbjFAZW1haWwuY29tIiwidXNlcm5hbWUiOiJ1c2VybmFtZTEiLCJpYXQiOjE2OTAyMTk5MDEsImV4cCI6MTY5MDgyNDcwMX0.pCFirLjG857VEVyciqrLr3mPhw2HfefccshILGpjF78
+@accessToken = 
+@refreshToken = 
 
 ### SignUp
 POST {{url}}/auth/signup HTTP/1.1

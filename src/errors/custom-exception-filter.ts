@@ -4,12 +4,15 @@ import {
   ArgumentsHost,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { handleDatabaseError } from './handle-database-error';
+import { handleErrorMessage } from './handle-error-message';
 
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger();
+
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
@@ -31,10 +34,14 @@ export class CustomExceptionFilter implements ExceptionFilter {
         message = exceptionResponse.message;
       }
     } else if (exception instanceof Error) {
-      const errorMessage = handleDatabaseError(exception);
-      status = HttpStatus.CONFLICT;
+      const errorMessage = handleErrorMessage(exception);
+      status = HttpStatus.INTERNAL_SERVER_ERROR;
+      if (exception['response'] && exception['response'].status)
+        status = exception['response'].data.message;
       message = errorMessage;
     }
+
+    this.logger.error(message);
 
     response.status(status).json({
       status,
