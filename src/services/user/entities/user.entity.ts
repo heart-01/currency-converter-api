@@ -8,6 +8,7 @@ import {
   Unique,
   BeforeInsert,
   Check,
+  BeforeUpdate,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 
@@ -47,6 +48,11 @@ export class User extends BaseEntity {
 
   @BeforeInsert()
   setRole() {
+    this.role = this.role?.toUpperCase();
+  }
+
+  @BeforeUpdate()
+  updateRole() {
     this.role = this.role?.toUpperCase();
   }
 

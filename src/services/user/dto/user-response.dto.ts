@@ -5,11 +5,13 @@ export class UserResponseDto {
   email: string;
   username: string;
   image: string;
+  role: string;
 
-  constructor(user: User) {
+  constructor(user: User, role?: string) {
     this.name = user.name;
     this.email = user.email;
     this.username = user.username;
     this.image = user.image;
+    this.role = role;
   }
 }

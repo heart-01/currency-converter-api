@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Patch,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -16,6 +17,7 @@ import { multerOptions } from 'src/config/multer.config';
 import { UserResponseDto } from './dto/user-response.dto';
 import { User } from './entities/user.entity';
 import { InternalAuthGuard } from 'src/guard/internal-auth.guard';
+import { RoleUserDto } from './dto/role-update.dto';
 
 @Controller('user')
 export class UserController {
@@ -28,9 +30,18 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard())
+  @Patch('role/:id')
+  updateRole(
+    @Param('id') id: number,
+    @Body() roleUserDto: RoleUserDto,
+  ): Promise<UserResponseDto> {
+    return this.userService.updateRole(id, roleUserDto);
+  }
+
+  @UseGuards(AuthGuard())
   @Patch(':id')
   @UseInterceptors(FileInterceptor('image', multerOptions))
-  update(
+  updateUser(
     @Param('id') id: number,
     @UploadedFile() image: Express.Multer.File,
     @Body() userUpdateDto: UserUpdateDto,

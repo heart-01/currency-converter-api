@@ -10,6 +10,7 @@ import { HttpService } from '@nestjs/axios';
 import * as bcrypt from 'bcryptjs';
 import { lastValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
+import { RoleUserDto } from './dto/role-update.dto';
 
 @Injectable()
 export class UserService {
@@ -67,14 +68,22 @@ export class UserService {
         userInfo.salt,
       );
     }
-
     if (image) {
       await removeFile(userInfo.image);
       userInfo.image = image.filename;
     }
 
     await this.userRepository.save(userInfo);
-
     return new UserResponseDto(userInfo);
+  }
+
+  async updateRole(
+    id: number,
+    roleUserDto: RoleUserDto,
+  ): Promise<UserResponseDto> {
+    const user = await this.findOne(id);
+    Object.assign(user, roleUserDto);
+    await this.userRepository.save(user);
+    return new UserResponseDto(user, user.role);
   }
 }
