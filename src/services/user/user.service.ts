@@ -53,7 +53,7 @@ export class UserService {
   ): Promise<UserResponseDto> {
     const userInfo = await (
       await lastValueFrom(
-        this.httpService.get(`${this.internalURL}/user/${id}`, {
+        this.httpService.get(`${this.internalURL}/api/user/${id}`, {
           headers: { internal: 'internal-api-key' },
         }),
       )

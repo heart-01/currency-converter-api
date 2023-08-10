@@ -56,7 +56,7 @@ export class AuthService {
       });
       return { ...payloadAccessToken, token: accessToken };
     } catch (error) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid token');
     }
   }
 }

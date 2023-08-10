@@ -21,6 +21,7 @@ async function bootstrap() {
   app.enableCors();
   app.use(express.json({ limit: '10mb' }));
 
+  app.setGlobalPrefix('api');
   app.useGlobalFilters(new CustomExceptionFilter());
 
   await app.listen(port);
