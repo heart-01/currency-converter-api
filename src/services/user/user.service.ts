@@ -27,9 +27,20 @@ export class UserService {
     this.internalURL = `${host}:${port}`;
   }
 
+  async findAll(keyword: string): Promise<User[]> {
+    if (keyword) {
+      const query = this.userRepository.createQueryBuilder('user');
+      query.andWhere('user.name LIKE :keyword', {
+        keyword: `%${keyword}%`,
+      });
+      return query.getMany();
+    }
+    return await this.userRepository.find();
+  }
+
   async findOne(id: number): Promise<User> {
     const found = await this.userRepository.findOne({ where: { id } });
-    if (!found) throw new NotFoundException(`Product ${id} not found`);
+    if (!found) throw new NotFoundException(`User ${id} not found`);
     return found;
   }
 

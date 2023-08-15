@@ -1,19 +1,8 @@
 @base_url = http://localhost
 @port = 3000
-@url = {{base_url}}:{{port}}
+@url = {{base_url}}:{{port}}/api
 @accessToken = 
 @refreshToken = 
-
-### SignUp
-POST {{url}}/auth/signup HTTP/1.1
-Content-Type: application/json
-
-{
-    "name": "admin",
-    "email": "admin@email.com",
-    "username": "username",
-    "password": "P@ssw0rd"
-}
 
 ### SignIn
 POST {{url}}/auth/signin HTTP/1.1
@@ -32,6 +21,22 @@ Authorization: Bearer {{refreshToken}}
 {
     "refreshToken": "{{refreshToken}}"
 }
+
+### SignUp
+POST {{url}}/auth/signup HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "admin",
+    "email": "admin@email.com",
+    "username": "username",
+    "password": "P@ssw0rd"
+}
+
+### Read user
+GET {{url}}/user/?name=admin HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
 
 ### Update user
 PATCH {{url}}/user/35 HTTP/1.1

@@ -18,7 +18,16 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.enableCors();
+  app.enableCors({
+    origin: ['*', 'http://example.com'],
+    methods: 'GET,PATCH,POST,DELETE',
+    credentials: true,
+    allowedHeaders: 'Content-Type, Accept',
+    exposedHeaders: 'Authorization',
+    maxAge: 3600,
+    optionsSuccessStatus: 204,
+    preflightContinue: false,
+  });
   app.use(express.json({ limit: '10mb' }));
 
   app.setGlobalPrefix('api');

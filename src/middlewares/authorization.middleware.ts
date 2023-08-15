@@ -4,10 +4,12 @@ import {
   NestMiddleware,
   Req,
 } from '@nestjs/common';
+import { isEmpty } from 'lodash';
 import { Response, NextFunction } from 'express';
 import { UserRole } from 'src/enumeration/user-role-enum';
 import { defineAbilityAdmin } from 'src/services/abilities/admin';
 import { defineAbilityUser } from 'src/services/abilities/user';
+import { defineAbilityInternal } from 'src/services/abilities/internal';
 
 interface User {
   name: string;
@@ -19,28 +21,61 @@ interface User {
 
 @Injectable()
 export class AuthorizationMiddleware implements NestMiddleware {
-  throwUnlessCan(user: User, action: string, path: string) {
-    const userRole = user.role.toUpperCase();
-    const ability =
-      userRole === UserRole.ADMIN ? defineAbilityAdmin : defineAbilityUser;
+  isRouteParams(path: string, allowPath: string): boolean {
+    const allowPathSplit = allowPath.split('/');
+    const pathSplit = path.split('/');
 
-    let accessible = false;
-    for (const allow of ability) {
-      const isAllowAction = allow.action.includes(action);
-      if (allow.path === path && isAllowAction) {
-        accessible = true;
+    if (allowPathSplit.length !== pathSplit.length) {
+      return false;
+    }
+
+    for (let index = 0; index < allowPathSplit.length; index++) {
+      if (allowPathSplit[index].includes(':')) {
+        allowPathSplit[index] = pathSplit[index];
       }
     }
 
-    return accessible;
+    return allowPathSplit.join('/') === pathSplit.join('/');
+  }
+
+  isActionAllowed(allow: any, action: string, path: string): boolean {
+    const isAllowAction = allow.action.includes(action);
+    const allowPath = allow.path;
+
+    if (!isAllowAction) {
+      return false;
+    }
+
+    return allowPath === path || this.isRouteParams(path, allowPath);
+  }
+
+  getAbility(userRole: string): any[] {
+    if (isEmpty(userRole)) {
+      return defineAbilityInternal;
+    } else {
+      return userRole.toUpperCase() === UserRole.ADMIN
+        ? defineAbilityAdmin
+        : defineAbilityAdmin;
+    }
   }
 
   async use(@Req() req, res: Response, next: NextFunction) {
     const { user, method: action, path } = req;
-    const url = path.replace(/^\/api\//, '');
-    const ability = this.throwUnlessCan(user, action, url);
+    let url = path.replace(/^\/api\//, '');
+    if (url.endsWith('/')) {
+      url = url.slice(0, -1);
+    }
 
-    if (ability) {
+    if (isEmpty(action) || isEmpty(path)) {
+      throw new ForbiddenException();
+    }
+
+    const ability = this.getAbility(user?.role);
+    const isAuthorized = ability.some((allow) =>
+      this.isActionAllowed(allow, action, url),
+    );
+
+    if (isAuthorized) {
       next();
     } else {
       throw new ForbiddenException();

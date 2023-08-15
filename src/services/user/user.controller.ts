@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   Patch,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,6 +19,11 @@ import { RoleUserDto } from './dto/role-update.dto';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get()
+  findAll(@Query('name') keyword: string): Promise<User[]> {
+    return this.userService.findAll(keyword);
+  }
 
   @Get(':id')
   find(@Param('id') id: number): Promise<User> {
