@@ -53,9 +53,9 @@ export class AuthorizationMiddleware implements NestMiddleware {
     if (isEmpty(userRole)) {
       return defineAbilityInternal;
     } else {
-      return userRole.toUpperCase() === UserRole.ADMIN
+      return userRole.toLocaleLowerCase() === UserRole.ADMIN
         ? defineAbilityAdmin
-        : defineAbilityAdmin;
+        : defineAbilityUser;
     }
   }
 
