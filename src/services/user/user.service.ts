@@ -27,15 +27,18 @@ export class UserService {
     this.internalURL = `${host}:${port}`;
   }
 
-  async findAll(keyword: string): Promise<User[]> {
+  async findAll(keyword: string): Promise<UserResponseDto[]> {
+    let found = []
     if (keyword) {
-      const query = this.userRepository.createQueryBuilder('user');
-      query.andWhere('user.name LIKE :keyword', {
-        keyword: `%${keyword}%`,
-      });
-      return query.getMany();
+      const found = await this.userRepository
+        .createQueryBuilder('user')
+        .andWhere('user.name LIKE :keyword', {
+          keyword: `%${keyword}%`,
+        })
+        .getMany();
     }
-    return await this.userRepository.find();
+    found = await this.userRepository.find();
+    return found.map((found) => new UserResponseDto(found));
   }
 
   async findOne(id: number): Promise<User> {

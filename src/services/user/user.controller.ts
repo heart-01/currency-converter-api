@@ -21,7 +21,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  findAll(@Query('name') keyword: string): Promise<User[]> {
+  findAll(@Query('name') keyword: string): Promise<UserResponseDto[]> {
     return this.userService.findAll(keyword);
   }
 

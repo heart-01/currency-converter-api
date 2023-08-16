@@ -2,6 +2,6 @@ export enum Action {
   create = 'POST',
   update = 'PATCH',
   read = 'GET',
-  delete = 'REMOVE',
-  manage = 'POST, PATCH, GET, REMOVE',
+  remove = 'DELETE',
+  manage = 'POST, PATCH, GET, DELETE',
 }

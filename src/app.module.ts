@@ -5,6 +5,8 @@ import { typeOrmConfig } from './config/typeorm.config';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './services/auth/auth.module';
 import { UserModule } from './services/user/user.module';
+import { CurrencyModule } from './services/currency/currency.module';
+import { ExchangeRateModule } from './services/exchange-rate/exchange-rate.module';
 import { AuthenticationMiddleware } from './middlewares/authentication.middleware';
 import { AuthorizationMiddleware } from './middlewares/authorization.middleware';
 
@@ -33,6 +35,8 @@ import { AuthorizationMiddleware } from './middlewares/authorization.middleware'
     }),
     AuthModule,
     UserModule,
+    CurrencyModule,
+    ExchangeRateModule,
   ],
   controllers: [],
   providers: [],

@@ -35,7 +35,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
     }
     try {
       const decodedToken = await this.jwtService.verify(token);
-      const user = await this.authJwtStrategy.validate(decodedToken.username);
+      const user = await this.authJwtStrategy.validate({username: decodedToken.username});
       Object.assign(req, { user });
 
       return next();
