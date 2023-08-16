@@ -50,8 +50,7 @@ export class CurrencyService {
     currencyData: UpdateCurrencyDto,
   ): Promise<CurrencyDto> {
     await this.currencyRepository.update(id, currencyData);
-    const currency = this.findOne(id);
-    return currency;
+    return this.findOne(id);
   }
 
   async remove(id: number): Promise<CurrencyDto[]> {
