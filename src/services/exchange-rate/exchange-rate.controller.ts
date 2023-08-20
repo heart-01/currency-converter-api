@@ -9,8 +9,8 @@ export class ExchangeRateController {
 
   @Post()
   async create(
-    @Body() exchangeRateDto: CreateExchangeRateDto,
+    @Body() exchangeRateData: CreateExchangeRateDto,
   ): Promise<ExchangeRateWithCurrenciesDto> {
-    return await this.exchangeRateService.create(exchangeRateDto);
+    return await this.exchangeRateService.create(exchangeRateData);
   }
 }
