@@ -1,7 +1,7 @@
 @base_url = http://localhost
 @port = 3000
 @url = {{base_url}}:{{port}}/api
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiYWRtaW4iLCJlbWFpbCI6ImFkbWluQGVtYWlsLmNvbSIsInVzZXJuYW1lIjoidXNlcm5hbWUiLCJpYXQiOjE2OTIyMDg1MjQsImV4cCI6MTY5MjIxMjEyNH0.wdR6aRmA-NiPrLqX2MoO-WNikjoIshpoO8l4cmw4uLU
+@accessToken = 
 @refreshToken = 
 
 ### SignIn
@@ -77,12 +77,12 @@ Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
 {
-    "name": "USD",
-    "country": "United States"
+    "name": "INR",
+    "country": "India"
 }
 
 ### Read currency
-GET {{url}}/currency HTTP/1.1
+GET {{url}}/currency?include=exchange-rate HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
@@ -99,3 +99,14 @@ Authorization: Bearer {{accessToken}}
 DELETE  {{url}}/currency/14 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
+
+### Create currency
+POST {{url}}/exchange-rate HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+    "rate": 10,
+    "fromCurrency": 12,
+    "toCurrency": 15
+}

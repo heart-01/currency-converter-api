@@ -19,13 +19,13 @@ export class ExchangeRate extends BaseEntity {
     nullable: false,
   })
   @JoinColumn({ name: 'from_currency_id' })
-  from_currency_id: string;
+  fromCurrency: Currency;
 
   @ManyToOne(() => Currency, (currency) => currency.toExchangeRate, {
     nullable: false,
   })
   @JoinColumn({ name: 'to_currency_id' })
-  to_currency_id: string;
+  toCurrency: Currency;
 
   @Column({ nullable: false })
   rate: number;

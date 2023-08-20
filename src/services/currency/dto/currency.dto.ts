@@ -1,6 +1,5 @@
 import { Type } from 'class-transformer';
 import { ExchangeRateDto } from 'src/services/exchange-rate/dto/exchange-rate.dto';
-
 import { Currency } from '../entities/currency.entity';
 
 export class CurrencyDto {

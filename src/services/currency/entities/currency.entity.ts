@@ -23,12 +23,10 @@ export class Currency extends BaseEntity {
   @Column({ length: 15, nullable: false })
   country: string;
 
-  @OneToOne(() => ExchangeRate, (exchangeRate) => exchangeRate.from_currency_id)
-  @JoinColumn()
+  @OneToOne(() => ExchangeRate, (exchangeRate) => exchangeRate.fromCurrency)
   fromExchangeRate: ExchangeRate;
 
-  @OneToOne(() => ExchangeRate, (exchangeRate) => exchangeRate.to_currency_id)
-  @JoinColumn()
+  @OneToOne(() => ExchangeRate, (exchangeRate) => exchangeRate.toCurrency)
   toExchangeRate: ExchangeRate;
 
   @CreateDateColumn({ name: 'created_at' })

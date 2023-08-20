@@ -28,16 +28,17 @@ export class UserService {
   }
 
   async findAll(keyword: string): Promise<UserResponseDto[]> {
-    let found = []
+    let found = [];
     if (keyword) {
-      const found = await this.userRepository
+      found = await this.userRepository
         .createQueryBuilder('user')
         .andWhere('user.name LIKE :keyword', {
           keyword: `%${keyword}%`,
         })
         .getMany();
+    } else {
+      found = await this.userRepository.find();
     }
-    found = await this.userRepository.find();
     return found.map((found) => new UserResponseDto(found));
   }
 
