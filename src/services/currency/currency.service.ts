@@ -4,6 +4,7 @@ import { Currency } from './entities/currency.entity';
 import { Repository } from 'typeorm';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
+import { CurrencyDtoWithExchangeRateDto } from './dto/currency-with-exchange-rate.dto';
 import { CurrencyDto } from './dto/currency.dto';
 
 @Injectable()
@@ -13,7 +14,7 @@ export class CurrencyService {
     private currencyRepository: Repository<Currency>,
   ) {}
 
-  async findAll(includeField?: string): Promise<CurrencyDto[]> {
+  async findAll(includeField?: string): Promise<CurrencyDtoWithExchangeRateDto[]> {
     let relations = [];
     if (includeField === 'exchange-rate') {
       relations = ['fromExchangeRate', 'toExchangeRate'];
@@ -22,10 +23,10 @@ export class CurrencyService {
     const found = await this.currencyRepository.find({
       relations,
     });
-    return found.map((currency) => new CurrencyDto(currency));
+    return found.map((currency) => new CurrencyDtoWithExchangeRateDto(currency));
   }
 
-  async findOne(id: number, includeField?: string): Promise<CurrencyDto> {
+  async findOne(id: number, includeField?: string): Promise<CurrencyDtoWithExchangeRateDto> {
     let relations = [];
     if (includeField === 'exchange-rate') {
       relations = ['fromExchangeRate', 'toExchangeRate'];
@@ -36,7 +37,7 @@ export class CurrencyService {
       relations,
     });
     if (!found) throw new NotFoundException(`Currency ${id} not found`);
-    return new CurrencyDto(found);
+    return new CurrencyDtoWithExchangeRateDto(found);
   }
 
   async create(currencyData: CreateCurrencyDto): Promise<CurrencyDto> {
@@ -48,12 +49,12 @@ export class CurrencyService {
   async update(
     id: number,
     currencyData: UpdateCurrencyDto,
-  ): Promise<CurrencyDto> {
+  ): Promise<CurrencyDtoWithExchangeRateDto> {
     await this.currencyRepository.update(id, currencyData);
     return this.findOne(id);
   }
 
-  async remove(id: number): Promise<CurrencyDto[]> {
+  async remove(id: number): Promise<CurrencyDtoWithExchangeRateDto[]> {
     await this.currencyRepository.delete(id);
     return this.findAll();
   }

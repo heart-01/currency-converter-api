@@ -33,6 +33,7 @@ Content-Type: application/json
     "password": "P@ssw0rd"
 }
 
+### *********************** USER SERVICE ***********************
 ### Read user
 GET {{url}}/user HTTP/1.1
 Content-Type: application/json
@@ -71,6 +72,7 @@ Authorization: Bearer {{accessToken}}
     "role": "admin"
 }
 
+### *********************** CURRENCY SERVICE ***********************
 ### Create currency
 POST {{url}}/currency HTTP/1.1
 Content-Type: application/json
@@ -100,7 +102,8 @@ DELETE  {{url}}/currency/14 HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
 
-### Create currency
+### *********************** EXCHANGE RATE SERVICE ***********************
+### Create exchange-rate
 POST {{url}}/exchange-rate HTTP/1.1
 Content-Type: application/json
 Authorization: Bearer {{accessToken}}
@@ -110,3 +113,8 @@ Authorization: Bearer {{accessToken}}
     "fromCurrency": 12,
     "toCurrency": 15
 }
+
+### Get exchange-rate
+GET {{url}}/exchange-rate HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}

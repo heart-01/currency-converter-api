@@ -11,6 +11,7 @@ import {
 import { CurrencyService } from './currency.service';
 import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
+import { CurrencyDtoWithExchangeRateDto } from './dto/currency-with-exchange-rate.dto';
 import { CurrencyDto } from './dto/currency.dto';
 
 @Controller('currency')
@@ -18,7 +19,7 @@ export class CurrencyController {
   constructor(private readonly currencyService: CurrencyService) {}
 
   @Get()
-  findAll(@Query('include') includeField: string): Promise<CurrencyDto[]> {
+  findAll(@Query('include') includeField: string): Promise<CurrencyDtoWithExchangeRateDto[]> {
     return this.currencyService.findAll(includeField);
   }
 
@@ -26,7 +27,7 @@ export class CurrencyController {
   findOne(
     @Param('id') id: string,
     @Query('include') includeField: string,
-  ): Promise<CurrencyDto> {
+  ): Promise<CurrencyDtoWithExchangeRateDto> {
     return this.currencyService.findOne(+id, includeField);
   }
 
@@ -39,12 +40,12 @@ export class CurrencyController {
   update(
     @Param('id') id: string,
     @Body() currencyData: UpdateCurrencyDto,
-  ): Promise<CurrencyDto> {
+  ): Promise<CurrencyDtoWithExchangeRateDto> {
     return this.currencyService.update(+id, currencyData);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<CurrencyDto[]> {
+  remove(@Param('id') id: string): Promise<CurrencyDtoWithExchangeRateDto[]> {
     return this.currencyService.remove(+id);
   }
 }
