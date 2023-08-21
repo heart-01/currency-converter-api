@@ -7,8 +7,7 @@ import {
   Unique,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToOne,
-  JoinColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity({ name: 'currency' })
@@ -23,11 +22,11 @@ export class Currency extends BaseEntity {
   @Column({ length: 15, nullable: false })
   country: string;
 
-  @OneToOne(() => ExchangeRate, (exchangeRate) => exchangeRate.fromCurrency)
-  fromExchangeRate: ExchangeRate;
+  @OneToMany(() => ExchangeRate, (exchangeRate) => exchangeRate.fromCurrency)
+  fromExchangeRate: ExchangeRate[];
 
-  @OneToOne(() => ExchangeRate, (exchangeRate) => exchangeRate.toCurrency)
-  toExchangeRate: ExchangeRate;
+  @OneToMany(() => ExchangeRate, (exchangeRate) => exchangeRate.toCurrency)
+  toExchangeRate: ExchangeRate[];
 
   @CreateDateColumn({ name: 'created_at' })
   created: Date;

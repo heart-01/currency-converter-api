@@ -10,10 +10,10 @@ export class CurrencyDto {
   country: string;
 
   @Type(() => ExchangeRateDto)
-  fromExchangeRate: ExchangeRateDto;
+  fromExchangeRate: ExchangeRateDto[];
 
   @Type(() => ExchangeRateDto)
-  toExchangeRate: ExchangeRateDto;
+  toExchangeRate: ExchangeRateDto[];
 
   constructor(currency: Currency) {
     this.id = currency.id;
