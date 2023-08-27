@@ -1,4 +1,5 @@
 import { ExchangeRate } from '../entities/exchange-rate.entity';
+import { get } from 'lodash';
 
 export class ExchangeRateDto {
   id: number;
@@ -9,7 +10,15 @@ export class ExchangeRateDto {
   constructor(exchangeRate: ExchangeRate) {
     this.id = exchangeRate.id;
     this.rate = exchangeRate.rate;
-    this.fromCurrency = exchangeRate.fromCurrency?.id;
-    this.toCurrency = exchangeRate.toCurrency?.id;
+    this.fromCurrency = get(
+      exchangeRate,
+      'fromCurrency.id',
+      get(exchangeRate, 'fromCurrency', undefined),
+    );
+    this.toCurrency = get(
+      exchangeRate,
+      'toCurrency.id',
+      get(exchangeRate, 'toCurrency', undefined),
+    );
   }
 }

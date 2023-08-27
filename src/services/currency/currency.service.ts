@@ -14,7 +14,9 @@ export class CurrencyService {
     private currencyRepository: Repository<Currency>,
   ) {}
 
-  async findAll(includeField?: string): Promise<CurrencyDtoWithExchangeRateDto[]> {
+  async findAll(
+    includeField?: string,
+  ): Promise<CurrencyDtoWithExchangeRateDto[]> {
     let relations = [];
     if (includeField === 'exchange-rate') {
       relations = ['fromExchangeRate', 'toExchangeRate'];
@@ -23,10 +25,12 @@ export class CurrencyService {
     const found = await this.currencyRepository.find({
       relations,
     });
-    return found.map((currency) => new CurrencyDtoWithExchangeRateDto(currency));
+    return found.map(
+      (currency) => new CurrencyDtoWithExchangeRateDto(currency),
+    );
   }
 
-  async findOne(id: number, includeField?: string): Promise<CurrencyDtoWithExchangeRateDto> {
+  async findOne(id: number, includeField?: string): Promise<Currency> {
     let relations = [];
     if (includeField === 'exchange-rate') {
       relations = ['fromExchangeRate', 'toExchangeRate'];
@@ -36,8 +40,10 @@ export class CurrencyService {
       where: { id },
       relations,
     });
+
     if (!found) throw new NotFoundException(`Currency ${id} not found`);
-    return new CurrencyDtoWithExchangeRateDto(found);
+    
+    return found;
   }
 
   async create(currencyData: CreateCurrencyDto): Promise<CurrencyDto> {
@@ -51,7 +57,8 @@ export class CurrencyService {
     currencyData: UpdateCurrencyDto,
   ): Promise<CurrencyDtoWithExchangeRateDto> {
     await this.currencyRepository.update(id, currencyData);
-    return this.findOne(id);
+    const currency = await this.findOne(id);
+    return new CurrencyDtoWithExchangeRateDto(currency);
   }
 
   async remove(id: number): Promise<CurrencyDtoWithExchangeRateDto[]> {

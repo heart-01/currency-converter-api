@@ -17,12 +17,16 @@ export class ExchangeRate extends BaseEntity {
 
   @ManyToOne(() => Currency, (currency) => currency.fromExchangeRate, {
     nullable: false,
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'from_currency_id' })
   fromCurrency: Currency;
 
   @ManyToOne(() => Currency, (currency) => currency.toExchangeRate, {
     nullable: false,
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'to_currency_id' })
   toCurrency: Currency;

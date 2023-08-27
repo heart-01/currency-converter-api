@@ -13,6 +13,7 @@ import { CreateCurrencyDto } from './dto/create-currency.dto';
 import { UpdateCurrencyDto } from './dto/update-currency.dto';
 import { CurrencyDtoWithExchangeRateDto } from './dto/currency-with-exchange-rate.dto';
 import { CurrencyDto } from './dto/currency.dto';
+import { Currency } from './entities/currency.entity';
 
 @Controller('currency')
 export class CurrencyController {
@@ -27,7 +28,7 @@ export class CurrencyController {
   findOne(
     @Param('id') id: string,
     @Query('include') includeField: string,
-  ): Promise<CurrencyDtoWithExchangeRateDto> {
+  ): Promise<Currency> {
     return this.currencyService.findOne(+id, includeField);
   }
 
