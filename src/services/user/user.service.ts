@@ -23,8 +23,7 @@ export class UserService {
     private readonly configService: ConfigService,
   ) {
     const host = this.configService.get<string>('HOST');
-    const port = this.configService.get<string>('PORT');
-    this.internalURL = `${host}:${port}`;
+    this.internalURL = `${host}`;
   }
 
   async findAll(keyword: string): Promise<UserResponseDto[]> {
