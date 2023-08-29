@@ -4,12 +4,12 @@ import {
   NestMiddleware,
   Req,
 } from '@nestjs/common';
-import { isEmpty } from 'lodash';
+import { isEmpty, get } from 'lodash';
 import { Response, NextFunction } from 'express';
 import { UserRole } from 'src/enumeration/user-role-enum';
 import { defineAbilityAdmin } from 'src/services/abilities/admin';
 import { defineAbilityUser } from 'src/services/abilities/user';
-import { defineAbilityInternal } from 'src/services/abilities/internal';
+import { Action } from 'src/enumeration/user-authorization-enum';
 
 interface User {
   name: string;
@@ -49,11 +49,20 @@ export class AuthorizationMiddleware implements NestMiddleware {
     return allowPath === path || this.isRouteParams(path, allowPath);
   }
 
-  getAbility(userRole: string): any[] {
-    if (isEmpty(userRole)) {
+  getAbility(user: { role: string; authMachineScopes: Array<string> }): any[] {
+    if (!isEmpty(user.authMachineScopes)) {
+      const defineAbilityInternal = user.authMachineScopes.map((item) => {
+        const colonIndex = item.indexOf(':');
+        const path = item.substring(colonIndex);
+        const action = item.substring(0, colonIndex);
+
+        return { path, action: Action[action] };
+      });
       return defineAbilityInternal;
-    } else {
-      return userRole.toLocaleLowerCase() === UserRole.ADMIN
+    }
+
+    if (!isEmpty(user.role)) {
+      return user.role.toLocaleLowerCase() === UserRole.ADMIN
         ? defineAbilityAdmin
         : defineAbilityUser;
     }
@@ -70,8 +79,8 @@ export class AuthorizationMiddleware implements NestMiddleware {
       throw new ForbiddenException();
     }
 
-    const ability = this.getAbility(user?.role);
-    const isAuthorized = ability.some((allow) =>
+    const ability = this.getAbility(user);
+    const isAuthorized = ability?.some((allow) =>
       this.isActionAllowed(allow, action, url),
     );
 

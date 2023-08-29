@@ -7,7 +7,9 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response, NextFunction } from 'express';
 import { isEmpty } from 'lodash';
+import { config } from 'src/config/default.config';
 import { AuthJwtStrategy } from 'src/services/auth/auth.jwt.strategy';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthenticationMiddleware implements NestMiddleware {
@@ -21,21 +23,35 @@ export class AuthenticationMiddleware implements NestMiddleware {
     const token = req.headers.authorization?.replace('Bearer ', '');
     const internalApiKey = req.headers?.internal;
 
-    if (internalApiKey) {
-      if (
-        internalApiKey === this.configService.get<string>('INTERNAL_API_KEY')
-      ) {
-        return next();
-      }
-      throw new UnauthorizedException('Invalid token');
-    }
-
     if (isEmpty(token)) {
       throw new UnauthorizedException();
     }
+
+    // authenticate Auth0
+    if (internalApiKey === this.configService.get<string>('INTERNAL_API_KEY')) {
+      try {
+        const { scope } = jwt.decode(token) as { scope: string };
+        const authMachineToken = jwt.sign(
+          config.authentication.auth0Jwt.payload,
+          this.configService.get<string>('INTERNAL_API_KEY'),
+          config.authentication.auth0Jwt.options,
+        );
+        Object.assign(req, {
+          user: { authMachineToken, authMachineScopes: scope?.split(' ') },
+        });
+
+        return next();
+      } catch (err) {
+        throw new UnauthorizedException('Invalid token');
+      }
+    }
+
+    // authenticate Service
     try {
       const decodedToken = await this.jwtService.verify(token);
-      const user = await this.authJwtStrategy.validate({username: decodedToken.username});
+      const user = await this.authJwtStrategy.validate({
+        username: decodedToken.username,
+      });
       Object.assign(req, { user });
 
       return next();

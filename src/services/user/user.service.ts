@@ -65,10 +65,25 @@ export class UserService {
     userUpdateDto: UserUpdateDto,
     image?: Express.Multer.File,
   ): Promise<UserResponseDto> {
+    const authenticateAuth0 = await (
+      await lastValueFrom(
+        this.httpService.post('https://siwat-dev.us.auth0.com/oauth/token', {
+          client_id: 'nUnIxQSTazQ4PBALWoznljhjJBSqDElI',
+          client_secret:
+            'tUMH7NciLnaCTcA2ZGWIhWO86JM1kb8MBkSE0k-OT-643_5ppv3RxtqGYAGJuB2c',
+          audience: 'https://currency-converter-api',
+          grant_type: 'client_credentials',
+        }),
+      )
+    ).data;
+
     const userInfo = await (
       await lastValueFrom(
         this.httpService.get(`${this.internalURL}/api/user/${id}`, {
-          headers: { internal: 'internal-api-key' },
+          headers: {
+            Authorization: authenticateAuth0.access_token,
+            internal: 'internal-api-key',
+          },
         }),
       )
     ).data;
