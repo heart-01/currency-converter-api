@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { isEmpty } from 'lodash';
 import { CreateExchangeRateDto } from './dto/create-exchange-rate.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { ExchangeRate } from './entities/exchange-rate.entity';
 import { ExchangeRateWithCurrenciesDto } from './dto/exchange-rate-with-currencies.dto';
 import { Currency } from '../currency/entities/currency.entity';
-import { EntityNotFoundException } from 'src/errors/http-exception';
+import {
+  EntityNotFoundException,
+  InvalidDataError,
+} from 'src/errors/http-exception';
 import { ExchangeRateDto } from './dto/exchange-rate.dto';
 import { UpdateExchangeRateDto } from './dto/update-exchange-rate.dto';
 import { CurrencyService } from '../currency/currency.service';
@@ -118,22 +122,35 @@ export class ExchangeRateService {
     const exchangeRateData = await this.exchangeRateRepository
       .createQueryBuilder('exchangeRate')
       .select([
-        'exchangeRate.rate',
-        'exchangeRate.from_currency_id',
-        'exchangeRate.to_currency_id',
+        'exchangeRate.rate AS rate',
+        'exchangeRate.from_currency_id AS fromCurrency',
+        'exchangeRate.to_currency_id AS toCurrency',
       ])
       .where('exchangeRate.id = :id', { id })
-      .getOne();
+      .getRawOne();
 
-    Object.assign(exchangeRateData, updateExchangeRateDto);
-
-    try {
-      await this.exchangeRateRepository.update(id, exchangeRateData);
-    } catch (error) {
-      throw new EntityNotFoundException('Currency', error);
+    if (isEmpty(exchangeRateData)) {
+      throw new InvalidDataError(`ExchangeRate ${id} not found`);
     }
 
-    return new ExchangeRateDto(exchangeRateData);
+    const formattedExchangeRateData = {
+      rate: exchangeRateData.rate,
+      fromCurrency: exchangeRateData.fromcurrency,
+      toCurrency: exchangeRateData.tocurrency,
+    };
+
+    Object.assign(formattedExchangeRateData, updateExchangeRateDto);
+
+    try {
+      await this.exchangeRateRepository.update(id, formattedExchangeRateData);
+      const updatedExchangeRate = await this.exchangeRateRepository.findOne({
+        where: { id },
+        relations: ['fromCurrency', 'toCurrency'],
+      });
+      return new ExchangeRateDto(updatedExchangeRate);
+    } catch (error) {
+      throw new EntityNotFoundException('ExchangeRate', error);
+    }
   }
 
   async remove(id: number): Promise<ExchangeRateWithCurrenciesDto[]> {
