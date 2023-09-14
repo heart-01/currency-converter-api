@@ -1,5 +1,5 @@
-import { CurrencyDto } from 'src/services/currency/dto/currency.dto';
-import { Currency } from 'src/services/currency/entities/currency.entity';
+import { CurrencyDto } from '../../../services/currency/dto/currency.dto';
+import { Currency } from '../../../services/currency/entities/currency.entity';
 
 export class ExchangeRateWithCurrenciesDto {
   id: number;

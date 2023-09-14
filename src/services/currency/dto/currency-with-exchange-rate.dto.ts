@@ -1,6 +1,6 @@
-import { ExchangeRateDto } from 'src/services/exchange-rate/dto/exchange-rate.dto';
+import { ExchangeRateDto } from '../../../services/exchange-rate/dto/exchange-rate.dto';
 import { Currency } from '../entities/currency.entity';
-import { ExchangeRate } from 'src/services/exchange-rate/entities/exchange-rate.entity';
+import { ExchangeRate } from '../../../services/exchange-rate/entities/exchange-rate.entity';
 import { isEmpty } from 'lodash';
 
 export class CurrencyDtoWithExchangeRateDto {

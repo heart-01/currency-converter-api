@@ -8,7 +8,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Currency } from 'src/services/currency/entities/currency.entity';
+import { Currency } from '../../../services/currency/entities/currency.entity';
 
 @Entity({ name: 'exchange_rate' })
 export class ExchangeRate extends BaseEntity {

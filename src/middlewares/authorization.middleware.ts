@@ -4,12 +4,12 @@ import {
   NestMiddleware,
   Req,
 } from '@nestjs/common';
-import { isEmpty, get } from 'lodash';
+import { isEmpty } from 'lodash';
 import { Response, NextFunction } from 'express';
-import { UserRole } from 'src/enumeration/user-role-enum';
-import { defineAbilityAdmin } from 'src/services/abilities/admin';
-import { defineAbilityUser } from 'src/services/abilities/user';
-import { Action } from 'src/enumeration/user-authorization-enum';
+import { UserRole } from '../enumeration/user-role-enum';
+import { defineAbilityAdmin } from '../services/abilities/admin';
+import { defineAbilityUser } from '../services/abilities/user';
+import { Action } from '../enumeration/user-authorization-enum';
 
 interface User {
   name: string;

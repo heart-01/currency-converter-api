@@ -1,4 +1,4 @@
-import { ExchangeRate } from 'src/services/exchange-rate/entities/exchange-rate.entity';
+import { ExchangeRate } from '../../../services/exchange-rate/entities/exchange-rate.entity';
 import {
   BaseEntity,
   Entity,

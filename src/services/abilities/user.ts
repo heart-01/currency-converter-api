@@ -1,4 +1,4 @@
-import { Action } from 'src/enumeration/user-authorization-enum';
+import { Action } from '../../enumeration/user-authorization-enum';
 
 export const defineAbilityUser = [
   { path: 'user/:id', action: Action.update },

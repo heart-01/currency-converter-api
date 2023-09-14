@@ -7,8 +7,8 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response, NextFunction } from 'express';
 import { isEmpty } from 'lodash';
-import { config } from 'src/config/default.config';
-import { AuthJwtStrategy } from 'src/services/auth/auth.jwt.strategy';
+import { config } from '../config/default.config';
+import { AuthJwtStrategy } from '../services/auth/auth.jwt.strategy';
 import * as jwt from 'jsonwebtoken';
 
 @Injectable()

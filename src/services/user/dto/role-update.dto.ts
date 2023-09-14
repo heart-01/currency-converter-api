@@ -1,5 +1,5 @@
 import { IsIn } from 'class-validator';
-import { UserRole } from 'src/enumeration/user-role-enum';
+import { UserRole } from '../../../enumeration/user-role-enum';
 
 export class RoleUserDto {
   @IsIn([UserRole.ADMIN, UserRole.USER])

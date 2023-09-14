@@ -9,7 +9,7 @@ import { Currency } from '../currency/entities/currency.entity';
 import {
   EntityNotFoundException,
   InvalidDataError,
-} from 'src/errors/http-exception';
+} from '../../errors/http-exception';
 import { ExchangeRateDto } from './dto/exchange-rate.dto';
 import { UpdateExchangeRateDto } from './dto/update-exchange-rate.dto';
 import { CurrencyService } from '../currency/currency.service';
