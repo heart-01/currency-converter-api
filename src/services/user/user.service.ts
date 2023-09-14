@@ -42,7 +42,9 @@ export class UserService {
   }
 
   async findOne(id: number): Promise<User> {
-    const found = await this.userRepository.findOne({ where: { id } });
+    const found = await this.userRepository.findOne({
+      where: { id },
+    });
     if (!found) throw new NotFoundException(`User ${id} not found`);
     return found;
   }
@@ -77,16 +79,21 @@ export class UserService {
       )
     ).data;
 
-    const userInfo = await (
-      await lastValueFrom(
-        this.httpService.get(`${this.internalURL}/api/user/${id}`, {
-          headers: {
-            Authorization: authenticateAuth0.access_token,
-            internal: 'internal-api-key',
-          },
-        }),
-      )
-    ).data;
+    let userInfo: User = null;
+    try {
+      userInfo = await (
+        await lastValueFrom(
+          this.httpService.get(`${this.internalURL}/api/user/${id}`, {
+            headers: {
+              Authorization: authenticateAuth0.access_token,
+              internal: 'internal-api-key',
+            },
+          }),
+        )
+      ).data;
+    } catch (err) {
+      throw new NotFoundException(err.response.data.message || err.message);
+    }
 
     Object.assign(userInfo, userUpdateDto); // Spread Operator จะคัดลอก properties ที่มีค่าใน userUpdateDto ไปยัง object user
 
@@ -114,5 +121,12 @@ export class UserService {
     Object.assign(user, roleUserDto);
     await this.userRepository.save(user);
     return new UserResponseDto(user, user.role);
+  }
+
+  async deleteUser(id: number): Promise<string> {
+    const user = await this.findOne(id);
+    user.deletedAt = new Date();
+    await this.userRepository.save(user);
+    return 'success';
   }
 }

@@ -9,6 +9,7 @@ import {
   BeforeInsert,
   Check,
   BeforeUpdate,
+  DeleteDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 
@@ -45,6 +46,9 @@ export class User extends BaseEntity {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updated: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at' })
+  deletedAt?: Date;
 
   @BeforeInsert()
   setRole() {

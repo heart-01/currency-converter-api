@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -11,7 +12,7 @@ import {
 import { UserService } from './user.service';
 import { UserUpdateDto } from './dto/user-update.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerOptions } from 'src/config/multer.config';
+import { multerOptions } from '../../config/multer.config';
 import { UserResponseDto } from './dto/user-response.dto';
 import { User } from './entities/user.entity';
 import { RoleUserDto } from './dto/role-update.dto';
@@ -46,5 +47,10 @@ export class UserController {
     @Body() userUpdateDto: UserUpdateDto,
   ): Promise<UserResponseDto> {
     return this.userService.updateUser(id, userUpdateDto, image);
+  }
+
+  @Delete(':id')
+  async deleteUser(@Param('id') id: number) {
+    return this.userService.deleteUser(id);
   }
 }
