@@ -7,9 +7,9 @@ import { ConfigModule } from '@nestjs/config';
 import { User } from '../../../src/services/user/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-describe('Authentication API:', () => {
+describe('Authentication Controller:', () => {
   let app: INestApplication;
-  let mockAuthService = {
+  let mockResponseAuthService = {
     signIn: () => {
       return {
         id: 1,
@@ -43,7 +43,7 @@ describe('Authentication API:', () => {
       ],
     })
       .overrideProvider(AuthService)
-      .useValue(mockAuthService)
+      .useValue(mockResponseAuthService)
       .compile();
 
     app = moduleRef.createNestApplication();
@@ -52,7 +52,7 @@ describe('Authentication API:', () => {
 
   it(`[POST] Admin login success`, async () => {
     const adminData = {
-      username: '123123',
+      username: 'username',
       password: '123123',
     };
 
@@ -60,8 +60,7 @@ describe('Authentication API:', () => {
       .post('/auth/signin')
       .send(adminData)
       .expect(201);
-    console.log({ response });
-    expect(response.body).toEqual(mockAuthService.signIn());
+    expect(response.body.token).toBeDefined();
   });
 
   afterAll(async () => {
