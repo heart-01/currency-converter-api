@@ -9,6 +9,7 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthJwtStrategy } from './auth.jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
+import { UserRepository } from '../user/user.repository';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { HttpModule } from '@nestjs/axios';
     HttpModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, AuthJwtStrategy],
+  providers: [AuthService, UserService, UserRepository, AuthJwtStrategy],
   exports: [AuthJwtStrategy, PassportModule],
 })
 export class AuthModule {}

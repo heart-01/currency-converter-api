@@ -11,6 +11,7 @@ import * as bcrypt from 'bcryptjs';
 import { lastValueFrom } from 'rxjs';
 import { ConfigService } from '@nestjs/config';
 import { RoleUserDto } from './dto/role-update.dto';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
@@ -21,6 +22,7 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
+    private readonly userRepositoryCustom: UserRepository,
   ) {
     const host = this.configService.get<string>('HOST');
     this.internalURL = `${host}`;
@@ -50,15 +52,13 @@ export class UserService {
   }
 
   async createUser(userSignUpDto: UserSignUpDto): Promise<UserResponseDto> {
-    const { name, email, username, password } = userSignUpDto;
-    const user = new User();
-    user.name = name;
-    user.username = username;
-    user.email = email;
-    user.salt = bcrypt.genSaltSync();
-    user.password = await bcrypt.hash(password, user.salt);
-    await user.save();
-
+    const salt = bcrypt.genSaltSync();
+    const password = await bcrypt.hash(userSignUpDto.password, salt);
+    const user = await this.userRepositoryCustom.createNewUser({
+      ...userSignUpDto,
+      salt,
+      password,
+    });
     return new UserResponseDto(user);
   }
 
