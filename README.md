@@ -45,6 +45,12 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+### Run Docker
+
+```bash
+  ./start_service.sh -e=[dev|prod] [up|down]
+```
+
 ## Test
 
 ```bash

@@ -1,0 +1,4 @@
+node_modules
+database
+.env*
+start_service.sh

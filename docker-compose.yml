@@ -1,0 +1,38 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - '${DB_PORT}:5432'
+    restart: always
+    volumes:
+      - ./database/postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nest_network
+
+  nest-app:
+    depends_on:
+      - postgres
+    ports:
+      - '${PORT}:3030'
+    env_file: ${ENV_FILE}
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: always
+    networks:
+      - nest_network
+
+networks:
+  nest_network:
+    name: host_nestjs
+    driver: bridge
