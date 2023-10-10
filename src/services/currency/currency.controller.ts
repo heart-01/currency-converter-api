@@ -14,17 +14,22 @@ import { UpdateCurrencyDto } from './dto/update-currency.dto';
 import { CurrencyDtoWithExchangeRateDto } from './dto/currency-with-exchange-rate.dto';
 import { CurrencyDto } from './dto/currency.dto';
 import { Currency } from './entities/currency.entity';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Currency')
+@ApiBearerAuth('authorization')
 @Controller('currency')
 export class CurrencyController {
   constructor(private readonly currencyService: CurrencyService) {}
 
   @Get()
+  @ApiQuery({ name: 'include', required: false })
   findAll(@Query('include') includeField: string): Promise<CurrencyDtoWithExchangeRateDto[]> {
     return this.currencyService.findAll(includeField);
   }
 
   @Get(':id')
+  @ApiQuery({ name: 'include', required: false })
   findOne(
     @Param('id') id: string,
     @Query('include') includeField: string,

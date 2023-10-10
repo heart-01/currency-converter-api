@@ -16,12 +16,16 @@ import { multerOptions } from '../../config/multer.config';
 import { UserResponseDto } from './dto/user-response.dto';
 import { User } from './entities/user.entity';
 import { RoleUserDto } from './dto/role-update.dto';
+import { ApiBearerAuth, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('User')
+@ApiBearerAuth('authorization')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
+  @ApiQuery({ name: 'name', required: false })
   findAll(@Query('name') keyword: string): Promise<UserResponseDto[]> {
     return this.userService.findAll(keyword);
   }

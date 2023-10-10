@@ -6,6 +6,7 @@ import * as express from 'express';
 import { CustomExceptionFilter } from './errors/custom-exception-filter';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { setupSwagger } from './config/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -38,6 +39,8 @@ async function bootstrap() {
   const jwtService = app.get(JwtService);
   app.useGlobalGuards(new JwtAuthGuard(jwtService)); */
 
+  setupSwagger(app);
+  
   app.setGlobalPrefix('api');
   app.useGlobalFilters(new CustomExceptionFilter());
 

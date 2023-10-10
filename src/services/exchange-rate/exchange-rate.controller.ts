@@ -12,7 +12,10 @@ import { ExchangeRateWithCurrenciesDto } from './dto/exchange-rate-with-currenci
 import { CreateExchangeRateDto } from './dto/create-exchange-rate.dto';
 import { UpdateExchangeRateDto } from './dto/update-exchange-rate.dto';
 import { ExchangeRateDto } from './dto/exchange-rate.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Exchange Rate')
+@ApiBearerAuth('authorization')
 @Controller('exchange-rate')
 export class ExchangeRateController {
   constructor(private readonly exchangeRateService: ExchangeRateService) {}
